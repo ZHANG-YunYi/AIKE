@@ -41,8 +41,9 @@ if __name__ == '__main__':
     points = []
     for k in range(0, city_num):
         points.append((city_data[k][0], city_data[k][1]))
-    path = []
-
+    path_Astar = []
+    path_GA = []
+    path_Anne = []
     print('======================================')
     print('          begin calculating           ')
     print('======================================')
@@ -51,35 +52,32 @@ if __name__ == '__main__':
     for point in point_path:
         for key, value in pos.items():
             if point == tuple(value):
-                path.append(key)
+                path_Astar.append(key)
     time_cost = time.time() - start
-    print('path calculated by AStar:\n', path)
+    print('path calculated by AStar:\n', path_Astar)
     print('runtime of AStar:', time_cost)
-    start = time.time()
-    # fig1 = plt.figure(figsize=(5, 4))
-    fig = plt.figure()
-    plt.subplot(1, 3, 1)
-    plt.title('Result of A*')
-    draw_path(city_data, path)
     print('======================================')
     start = time.time()
-    path = GeneticAlgorithm.run_GA(city_data)
-    print('path calculated by GA:\n', path)
+    path_GA = GeneticAlgorithm.run_GA(city_data)
+    print('path calculated by GA:\n', path_GA)
     time_cost = time.time() - start
     print('runtime of GA:', time_cost)
-    # fig2 = plt.figure(figsize=(5, 4))
-    plt.subplot(1, 3, 2)
-    plt.title('Result of Genetic')
-    draw_path(city_data, path)
-    # plt.show()
     print('======================================')
     start = time.time()
-    path = AnnealingAlgorithm.run_Anneal(city_data)
+    path_Anne = AnnealingAlgorithm.run_Anneal(city_data)
     time_cost = time.time() - start
-    print('path calculated by Anneal:\n', path)
-    # fig3 = plt.figure(figsize=(5, 4))
-    plt.subplot(1, 3, 3)
-    plt.title('Result of Annealing')
-    draw_path(city_data, path)
+    print('path calculated by Anneal:\n', path_Anne)
     print('runtime of Annealing:', time_cost)
+
+    # 画图
+    fig3 = plt.figure()
+    plt.subplot(1,3,1)
+    plt.title('result of A*')
+    draw_path(city_data, path_Astar)
+    plt.subplot(1,3,2)
+    plt.title('result of GA')
+    draw_path(city_data, path_GA)
+    plt.subplot(1,3,3)
+    plt.title('result of Annealing')
+    draw_path(city_data, path_Anne)
     plt.show()
