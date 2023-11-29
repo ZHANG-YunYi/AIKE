@@ -2,6 +2,7 @@ import numpy as np
 import sys
 import time
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 class GA:
 
     def __init__(self, citys, maxgen=500,
@@ -123,17 +124,20 @@ def run_GA(citys):
     SL = GA(citys)
     SL.matrix_distance()
     SL.generate_population()
+    fig1= plt.figure()
+    ax1 = fig1.add_subplot(1,1,1)
+    plt.title('The curve of GA iteration')
+    plt.xlabel('iteration')
+    plt.ylabel('total distance of the best path')
+    total_distance_list = []
     print('Iteration progress of Genetic algorithm...')
     for i in tqdm(range(SL.maxgen)):
         SL.crossover()
         SL.mutation()
         SL.select()
+        path = SL.result_path()
+        total_distance_list.append(SL.get_total_distance(path))
+    iters = [i for i in range(SL.maxgen)]
+    ax1.plot(iters, total_distance_list)
     path=SL.result_path()
-    return path
-
-# if __name__ == '__main__':
-#     citys = np.array([[16.47, 96.10], [16.47, 94.44], [20.09, 92.54],
-#                       [22.39, 93.37], [25.23, 97.24], [22.00, 96.05], [20.47, 97.02],
-#                       [17.20, 96.29], [16.30, 97.38], [14.05, 98.12], [16.53, 97.38],
-#                       [21.52, 95.59], [19.41, 97.13], [20.09, 92.55]])
-#     main(citys)
+    return path, total_distance_list[-1]

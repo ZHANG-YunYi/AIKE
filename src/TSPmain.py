@@ -24,10 +24,14 @@ def draw_path(city_data, path):
         # 这里加上节点的序号和坐标属性，访问属性用nx.get_node_attributes(city_graph, 'position')
         city_graph.add_node(i, idx=i, position=city_data[i])
     k = 0
+    if path == []:
+        nx.draw(city_graph, pos=pos, with_labels=True)
+        return
     for k in range(0, len(path) - 1):
         city_graph.add_edge(path[k], path[k + 1])
     city_graph.add_edge(path[-1], path[0])
     nx.draw(city_graph, pos=pos, with_labels=True)
+    return
     # plt.show()
 
 
@@ -48,36 +52,40 @@ if __name__ == '__main__':
     print('          begin calculating           ')
     print('======================================')
     start = time.time()
-    point_path = AStarAlgorithm.run_AStar(points)
+    point_path, total_distance_Astar = AStarAlgorithm.run_AStar(points)
     for point in point_path:
         for key, value in pos.items():
             if point == tuple(value):
                 path_Astar.append(key)
     time_cost = time.time() - start
-    print('path calculated by AStar:\n', path_Astar)
+    print('path calculated by AStar:', path_Astar)
+    print('total distance :', total_distance_Astar)
     print('runtime of AStar:', time_cost)
     print('======================================')
     start = time.time()
-    path_GA = GeneticAlgorithm.run_GA(city_data)
-    print('path calculated by GA:\n', path_GA)
+    path_GA, total_distance_GA = GeneticAlgorithm.run_GA(city_data)
+    print('path calculated by GA:', path_GA)
+    print('total distance :', total_distance_GA)
     time_cost = time.time() - start
     print('runtime of GA:', time_cost)
     print('======================================')
     start = time.time()
-    path_Anne = AnnealingAlgorithm.run_Anneal(city_data)
+    path_Anne, total_distance_Anne = AnnealingAlgorithm.run_Anneal(city_data)
     time_cost = time.time() - start
-    print('path calculated by Anneal:\n', path_Anne)
+    print('path calculated by Anneal:', path_Anne)
+    print('total distance:', total_distance_Anne)
     print('runtime of Annealing:', time_cost)
 
     # 画图
-    fig3 = plt.figure()
-    plt.subplot(1,3,1)
+    fig3 = plt.figure(figsize=(10,4))
     plt.title('result of A*')
     draw_path(city_data, path_Astar)
-    plt.subplot(1,3,2)
+    fig4 = plt.figure(figsize=(10, 4))
+    # plt.subplot(1,3,2)
     plt.title('result of GA')
     draw_path(city_data, path_GA)
-    plt.subplot(1,3,3)
+    # plt.subplot(1,3,3)
+    fig5 = plt.figure(figsize=(10, 4))
     plt.title('result of Annealing')
     draw_path(city_data, path_Anne)
     plt.show()
